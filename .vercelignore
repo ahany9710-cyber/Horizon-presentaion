@@ -1,0 +1,6 @@
+app/
+components/
+package.json
+package-lock.json
+next.config.js
+node_modules/
