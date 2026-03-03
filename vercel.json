@@ -1,7 +1,8 @@
 {
-  "buildCommand": "",
-  "outputDirectory": ".",
   "framework": null,
+  "buildCommand": "echo 'Static site - no build'",
+  "installCommand": "echo 'Skipping install'",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
