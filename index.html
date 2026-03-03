@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Views Investments X Horizon | Strategic Partnership</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ── Brand Palette ── */
+    :root {
+      --red:         #E52320;
+      --green:       #1A5C44;
+      --green-light: #22755a;
+      --green-glow:  #0d3326;
+      --gold:        #D4A84B;
+      --gold-muted:  #a37e30;
+      --bg:          #060d0a;
+      --card:        #0b1a13;
+      --card-border: #183328;
+      --subtext:     #7aaa96;
+      --subtext-dim: #3d6654;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: #f0f4f2;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Scroll Snap ── */
+    main { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+    main::-webkit-scrollbar { display: none; }
+    section { scroll-snap-align: start; scroll-snap-stop: always; }
+
+    /* ── Slide nav dots ── */
+    #nav-dots {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      z-index: 100;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0e2219;
+      border: 1.5px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dot.active {
+      background: var(--green);
+      border-color: var(--green-light);
+      transform: scale(1.4);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .anim-0 { animation: fadeUp 0.7s ease both; }
+    .anim-1 { animation: fadeUp 0.7s 0.15s ease both; }
+    .anim-2 { animation: fadeUp 0.7s 0.30s ease both; }
+    .anim-3 { animation: fadeUp 0.7s 0.45s ease both; }
+
+    /* ── Card base ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      border-color: rgba(26,92,68,0.6);
+      box-shadow: 0 0 0 1px rgba(26,92,68,0.15);
+    }
+
+    /* ── Gold number text ── */
+    .gold { color: var(--gold); }
+    .red  { color: var(--red); }
+
+    /* ── Separator ── */
+    .sep {
+      display: inline-block;
+      width: 3rem;
+      height: 2px;
+      background: linear-gradient(to right, var(--green), var(--gold));
+      border-radius: 2px;
+    }
+
+    /* ── Section tag ── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      border: 1px solid rgba(26,92,68,0.5);
+      border-radius: 999px;
+      padding: 4px 12px;
+      background: rgba(26,92,68,0.08);
+    }
+
+    /* ── Valuation / highlight boxes ── */
+    .gold-box {
+      border: 1.5px solid rgba(212,168,75,0.4);
+      background: rgba(212,168,75,0.05);
+      border-radius: 14px;
+    }
+    .finale-border {
+      border: 1.5px solid rgba(229,35,32,0.45);
+      background: rgba(229,35,32,0.04);
+      border-radius: 16px;
+    }
+
+    /* ── Metric row ── */
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 1.1rem 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      transition: border-color 0.3s;
+    }
+    .metric-row:hover { border-color: rgba(26,92,68,0.4); }
+
+    /* ── Pillar accent stripe ── */
+    .pillar { position: relative; overflow: hidden; }
+    .pillar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--green), var(--gold));
+      border-radius: 3px 0 0 3px;
+    }
+
+    /* ── Logo frame ── */
+    .logo-wrap {
+      background: rgba(26,92,68,0.07);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 90px;
+      min-width: 160px;
+    }
+    .logo-wrap img { max-height: 62px; max-width: 160px; object-fit: contain; }
+
+    /* ── Slide BG helper ── */
+    .slide-glow-green {
+      background: radial-gradient(ellipse at 50% 55%, #0a2e1e 0%, var(--bg) 70%);
+    }
+    .slide-glow-center {
+      background: radial-gradient(ellipse at 50% 50%, #091e14 0%, var(--bg) 65%);
+    }
+
+    /* ── Icon badge ── */
+    .icon-badge {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(26,92,68,0.18);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .icon-badge-sm {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(26,92,68,0.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Pillar number label ── */
+    .pillar-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green-light);
+    }
+
+    /* ── Card label ── */
+    .card-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      color: var(--subtext-dim);
+    }
+    .card-label-red {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      color: var(--red);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation Dots -->
+<nav id="nav-dots" aria-label="Slide navigation">
+  <button class="dot active" data-slide="0" title="Slide 1"></button>
+  <button class="dot" data-slide="1" title="Slide 2"></button>
+  <button class="dot" data-slide="2" title="Slide 3"></button>
+  <button class="dot" data-slide="3" title="Slide 4"></button>
+  <button class="dot" data-slide="4" title="Slide 5"></button>
+  <button class="dot" data-slide="5" title="Slide 6"></button>
+</nav>
+
+<main id="deck">
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 1 — Title & Hook ━━━━━━━━━━━━━━━━ -->
+  <section class="h-screen w-full flex flex-col items-center justify-center px-6 sm:px-12 slide-glow-green">
+    <div class="flex flex-col items-center gap-6 md:gap-8 max-w-4xl mx-auto text-center">
+
+      <div class="tag anim-0">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--green-light);display:inline-block;"></span>
+        Exclusive Investment Deck · 2025–2026
+      </div>
+
+      <h1 class="anim-1" style="font-size:clamp(2rem,5vw,3.75rem);font-weight:800;line-height:1.1;letter-spacing:-0.02em;color:#fff;">
+        Strategic Partnership &amp;<br>
+        <span style="color:var(--red);">Market Domination</span>
+      </h1>
+
+      <p class="anim-2" style="font-size:clamp(1rem,2vw,1.35rem);color:var(--subtext);letter-spacing:0.04em;font-weight:500;">
+        Views Investments
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;font-size:0.85rem;margin:0 10px;">X</span>
+        Horizon
+      </p>
+
+      <div class="anim-3 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 mt-4">
+        <div class="logo-wrap">
+          <img src="public/views-logo.png" alt="Views Investments"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div style="display:none;color:var(--subtext-dim);font-weight:700;font-size:1.1rem;align-items:center;justify-content:center;width:100%;height:100%;">Views</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:1px;height:18px;background:linear-gradient(to bottom,transparent,var(--card-border));"></div>
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#fff;">X</div>
+          <div style="width:1px;height:18px;background:linear-gradient(to top,transparent,var(--card-border));"></div>
+        </div>
+        <div class="logo-wrap">
+          <img src="public/horizon-logo.png" alt="Horizon"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div style="display:none;color:var(--subtext-dim);font-weight:700;font-size:1.1rem;align-items:center;justify-content:center;width:100%;height:100%;">Horizon</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 2 — Traction ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 py-8 overflow-y-auto slide-glow-center">
+    <div class="w-full max-w-7xl mx-auto space-y-8">
+      <div class="space-y-2 text-center">
+        <span class="tag">Company Overview</span>
+        <h2 style="font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-0.02em;color:#fff;">Traction &amp; Core Assets</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+
+        <div class="card pillar p-7 flex flex-col gap-3">
+          <div class="icon-badge">
+            <svg width="22" height="22" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          </div>
+          <p style="font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-0.03em;" class="gold">
+            <span class="count-up" data-end="25">0</span> B EGP
+          </p>
+          <p style="font-weight:600;font-size:0.95rem;color:#fff;">Record Sales Volume</p>
+          <p style="font-size:0.82rem;color:var(--subtext);line-height:1.5;">Achieved in a record 15-month timeframe: Sep 2024 – Dec 2025</p>
+        </div>
+
+        <div class="card pillar p-7 flex flex-col gap-3">
+          <div class="icon-badge">
+            <svg width="22" height="22" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </div>
+          <p style="font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-0.03em;" class="gold">
+            <span class="count-up" data-end="800">0</span>+
+          </p>
+          <p style="font-weight:600;font-size:0.95rem;color:#fff;">Sales Force Engine</p>
+          <p style="font-size:0.82rem;color:var(--subtext);line-height:1.5;">Ready, trained, and highly active Property Consultants</p>
+        </div>
+
+        <div class="card pillar p-7 flex flex-col gap-3">
+          <div class="icon-badge">
+            <svg width="22" height="22" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+          </div>
+          <p style="font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-0.03em;" class="gold">
+            <span class="count-up" data-end="100">0</span>M+ EGP
+          </p>
+          <p style="font-weight:600;font-size:0.95rem;color:#fff;">Proprietary Asset / The Moat</p>
+          <p style="font-size:0.82rem;color:var(--subtext);line-height:1.5;">Historical acquisition cost for our exclusive, highly-qualified Real Estate Buyer Database</p>
+        </div>
+
+        <div class="card pillar p-7 flex flex-col gap-3">
+          <div class="icon-badge">
+            <svg width="22" height="22" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <p style="font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-0.03em;" class="gold">
+            <span class="count-up" data-end="140">0</span>M EGP
+          </p>
+          <p style="font-weight:600;font-size:0.95rem;color:#fff;">Operational Independence</p>
+          <p style="font-size:0.82rem;color:var(--subtext);line-height:1.5;">Cash on Hand. 100% Debt-Free entity ensuring robust financial stability</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 3 — Financial Performance ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 py-8 overflow-y-auto slide-glow-center">
+    <div class="w-full max-w-2xl space-y-6">
+      <div class="space-y-2 text-center">
+        <span class="tag">15 Months · Sep 2024 – Dec 2025</span>
+        <h2 style="font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-0.02em;color:#fff;">Financial Performance</h2>
+        <div class="sep" style="margin:0 auto;display:block;width:3rem;"></div>
+      </div>
+      <div class="space-y-3">
+        <div class="metric-row">
+          <span style="font-size:0.9rem;color:var(--subtext);max-width:55%;">Gross Commissions Generated</span>
+          <span style="font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;" class="gold">
+            <span class="count-up" data-end="850" data-decimals="0">0</span> M EGP
+          </span>
+        </div>
+        <div class="metric-row">
+          <span style="font-size:0.9rem;color:var(--subtext);max-width:55%;">Gross Profit Margin <span style="color:var(--subtext-dim);">(Net of 35% Sales Commissions)</span></span>
+          <span style="font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;" class="gold">
+            <span class="count-up" data-end="552.5" data-decimals="1">0</span> M EGP
+          </span>
+        </div>
+        <div class="metric-row">
+          <span style="font-size:0.9rem;color:var(--subtext);max-width:55%;">Operational Expenses (OPEX)</span>
+          <span style="font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;" class="gold">
+            <span class="count-up" data-end="330" data-decimals="0">0</span> M EGP
+          </span>
+        </div>
+        <div class="metric-row" style="border-color:rgba(229,35,32,0.25);background:rgba(229,35,32,0.04);">
+          <span style="font-size:0.9rem;color:#e4e4e7;font-weight:600;max-width:55%;">EBITDA <span style="color:var(--subtext);font-weight:400;">(Operating Profit)</span></span>
+          <span style="font-size:1.7rem;font-weight:900;letter-spacing:-0.03em;color:var(--red);">
+            <span class="count-up" data-end="222.5" data-decimals="1">0</span> M EGP
+          </span>
+        </div>
+      </div>
+      <div class="gold-box p-5 sm:p-6 text-center">
+        <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);opacity:0.65;margin-bottom:5px;">Pre-Money Valuation</p>
+        <p style="font-size:clamp(1rem,2.5vw,1.3rem);font-weight:700;color:var(--gold);">Estimated 850M to 1 Billion EGP</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 4 — 2026 Projections ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 py-8 overflow-y-auto slide-glow-center">
+    <div class="w-full max-w-3xl space-y-8">
+      <div class="space-y-2 text-center">
+        <span class="tag">Forward-Looking</span>
+        <h2 style="font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-0.02em;color:#fff;">2026 Financial Projections</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="card p-6 space-y-1">
+          <p class="card-label">Target Sales Volume</p>
+          <p style="font-size:2rem;font-weight:800;letter-spacing:-0.03em;" class="gold"><span class="count-up" data-end="30">0</span> B EGP</p>
+        </div>
+        <div class="card p-6 space-y-1">
+          <p class="card-label">Projected Gross Margin</p>
+          <p style="font-size:2rem;font-weight:800;letter-spacing:-0.03em;" class="gold"><span class="count-up" data-end="650">0</span> M EGP</p>
+        </div>
+        <div class="card p-6 space-y-1">
+          <p class="card-label">Estimated Annual OPEX</p>
+          <p style="font-size:2rem;font-weight:800;letter-spacing:-0.03em;" class="gold"><span class="count-up" data-end="264">0</span> M EGP</p>
+        </div>
+        <div class="card p-6 space-y-1" style="border-color:rgba(229,35,32,0.3);background:rgba(229,35,32,0.04);">
+          <p class="card-label-red">Projected EBITDA</p>
+          <p style="font-size:2.2rem;font-weight:900;letter-spacing:-0.03em;color:var(--red);"><span class="count-up" data-end="386">0</span> M EGP</p>
+        </div>
+      </div>
+      <div class="card p-6 text-center" style="border-color:rgba(212,168,75,0.18);">
+        <p style="font-size:0.92rem;color:var(--subtext);line-height:1.7;">
+          Over <span style="color:var(--gold);font-weight:700;">70%</span> expected growth in operating profits, driven by high scalability, cost efficiency, and market dominance.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 5 — Growth Engine ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 py-8 overflow-y-auto slide-glow-center">
+    <div class="w-full max-w-7xl mx-auto space-y-8">
+      <div class="space-y-2 text-center">
+        <span class="tag">Capital Deployment</span>
+        <h2 style="font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-0.02em;color:#fff;">The Growth Engine <span style="color:var(--gold);font-size:0.7em;font-weight:500;">(Use of Funds)</span></h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+
+        <div class="card pillar p-7 flex flex-col gap-4">
+          <div class="pillar-num">01</div>
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <h3 style="font-size:0.95rem;font-weight:700;color:#fff;line-height:1.4;">B2B Brokerage Aggregation <span style="color:var(--gold);">(Close to Views)</span></h3>
+          <p style="font-size:0.8rem;color:var(--subtext);line-height:1.65;">200M EGP fund to aggregate SME brokers. Expected Return: 120M EGP direct profit + ~400M EGP retroactive developer bonuses.</p>
+        </div>
+
+        <div class="card pillar p-7 flex flex-col gap-4">
+          <div class="pillar-num">02</div>
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+          </div>
+          <h3 style="font-size:0.95rem;font-weight:700;color:#fff;line-height:1.4;">100% Commission / Desk-Fee Hub</h3>
+          <p style="font-size:0.8rem;color:var(--subtext);line-height:1.65;">A revolutionary plug-and-play co-working model monetizing infrastructure for independent brokers. Projected Year 1 Profit: 250M EGP.</p>
+        </div>
+
+        <div class="card pillar p-7 flex flex-col gap-4">
+          <div class="pillar-num">03</div>
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          </div>
+          <h3 style="font-size:0.95rem;font-weight:700;color:#fff;line-height:1.4;">Distressed Asset PropTech</h3>
+          <p style="font-size:0.8rem;color:var(--subtext);line-height:1.65;">A tech platform matching urgent, distressed sellers with cash-ready investors to capture ultra-high margins.</p>
+        </div>
+
+        <div class="card pillar p-7 flex flex-col gap-4">
+          <div class="pillar-num">04</div>
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/></svg>
+          </div>
+          <h3 style="font-size:0.95rem;font-weight:700;color:#fff;line-height:1.4;">Fractional Ownership PropTech</h3>
+          <p style="font-size:0.8rem;color:var(--subtext);line-height:1.65;">Democratizing real estate by launching a regulated micro-investment platform.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 6 — Deal Structure ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 py-8 overflow-y-auto slide-glow-green">
+    <div class="w-full max-w-5xl space-y-8">
+      <div class="space-y-2 text-center">
+        <span class="tag">The Ask</span>
+        <h2 style="font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-0.02em;color:#fff;">Proposed Deal Structure</h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div class="card p-7 sm:p-8 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="icon-badge-sm">
+              <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"/></svg>
+            </div>
+            <h3 style="font-size:1.05rem;font-weight:700;color:var(--red);">Section A — The Core Partnership</h3>
+          </div>
+          <p style="font-size:0.9rem;color:var(--subtext);line-height:1.75;">Acquisition of a <strong style="color:#fff;">50% equity stake</strong> in Views Investments based on the current valuation, sharing the core 2026 projected profits <span style="color:var(--gold);font-weight:600;">(386M EGP)</span>.</p>
+        </div>
+        <div class="card p-7 sm:p-8 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="icon-badge-sm">
+              <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <h3 style="font-size:1.05rem;font-weight:700;color:var(--red);">Section B — Growth Capital Injection</h3>
+          </div>
+          <p style="font-size:0.9rem;color:var(--subtext);line-height:1.75;">A dedicated primary capital fund injection to exclusively finance and launch the <strong style="color:#fff;">4 strategic growth pillars</strong> outlined in the expansion plan.</p>
+        </div>
+      </div>
+      <div class="finale-border p-7 sm:p-10 text-center">
+        <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);opacity:0.8;margin-bottom:10px;">The Ultimate Vision</p>
+        <p style="font-size:clamp(1rem,2.5vw,1.35rem);font-weight:700;color:#fff;line-height:1.55;">
+          Evolving from a market-leading brokerage into the <span style="color:var(--red);">absolute, dominant</span> real estate ecosystem in the region.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ── Count-up animation ──
+  function animateCountUp(el) {
+    const end = parseFloat(el.dataset.end);
+    const decimals = parseInt(el.dataset.decimals) || 0;
+    const duration = 1800;
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      el.textContent = (end * eased).toFixed(decimals);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = end.toFixed(decimals);
+    }
+    requestAnimationFrame(step);
+  }
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.animated) {
+        entry.target.dataset.animated = "1";
+        animateCountUp(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.count-up').forEach(el => countObserver.observe(el));
+
+  // ── Nav dot tracking ──
+  const deck = document.getElementById('deck');
+  const slides = deck.querySelectorAll('section');
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.slide);
+      slides[idx].scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  const slideObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[idx]) dots[idx].classList.add('active');
+      }
+    });
+  }, { threshold: 0.5, root: deck });
+  slides.forEach(slide => slideObserver.observe(slide));
+</script>
+</body>
+</html>
