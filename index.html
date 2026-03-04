@@ -38,6 +38,7 @@
       --card-border: #183328;
       --subtext:     #7aaa96;
       --subtext-dim: #3d6654;
+      --emerald:     #34d399;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -266,6 +267,58 @@
       font-weight: 600;
       color: var(--red);
     }
+    .card-label-emerald {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      color: var(--emerald);
+    }
+
+    /* ── ROI chart ── */
+    .roi-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 120px;
+      max-width: 100%;
+      margin: 0 auto;
+      position: relative;
+    }
+    .roi-bar-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .roi-bar {
+      width: 100%;
+      height: 0;
+      max-height: 80px;
+      background: linear-gradient(to top, var(--green), var(--emerald));
+      border-radius: 4px 4px 0 0;
+      transition: height 1s ease-out;
+    }
+    .roi-chart.visible .roi-bar { height: calc(80px * var(--bar-height, 0) / 100); }
+    .roi-bar-wrap.milestone .roi-bar { box-shadow: 0 0 0 2px var(--emerald); }
+    .roi-milestone-line {
+      position: absolute;
+      bottom: 0;
+      left: 87.5%;
+      width: 0;
+      height: 100%;
+      border-left: 2px dashed var(--emerald);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    .roi-bar-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: var(--subtext-dim);
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -278,6 +331,10 @@
   <button class="dot-btn" data-slide="3" title="Slide 4"><span class="dot"></span></button>
   <button class="dot-btn" data-slide="4" title="Slide 5"><span class="dot"></span></button>
   <button class="dot-btn" data-slide="5" title="Slide 6"><span class="dot"></span></button>
+  <button class="dot-btn" data-slide="6" title="Slide 7"><span class="dot"></span></button>
+  <button class="dot-btn" data-slide="7" title="Slide 8"><span class="dot"></span></button>
+  <button class="dot-btn" data-slide="8" title="Slide 9"><span class="dot"></span></button>
+  <button class="dot-btn" data-slide="9" title="Slide 10"><span class="dot"></span></button>
 </nav>
 
 <main id="deck">
@@ -407,9 +464,9 @@
             <span class="count-up" data-end="330" data-decimals="0">0</span> M EGP
           </span>
         </div>
-        <div class="metric-row" style="border-color:rgba(229,35,32,0.25);background:rgba(229,35,32,0.04);">
+        <div class="metric-row" style="border-color:rgba(52,211,153,0.25);background:rgba(52,211,153,0.04);">
           <span class="text-sm md:text-base font-semibold text-white max-w-[55%]">EBITDA <span class="font-normal" style="color:var(--subtext);">(Operating Profit)</span></span>
-          <span class="red text-2xl md:text-4xl font-black tracking-tight">
+          <span class="text-2xl md:text-4xl font-black tracking-tight" style="color:var(--emerald);">
             <span class="count-up" data-end="222.5" data-decimals="1">0</span> M EGP
           </span>
         </div>
@@ -441,9 +498,9 @@
           <p class="card-label">Estimated Annual OPEX</p>
           <p class="gold text-3xl md:text-4xl font-extrabold tracking-tight"><span class="count-up" data-end="264">0</span> M EGP</p>
         </div>
-        <div class="card p-6 md:p-8 space-y-2" style="border-color:rgba(229,35,32,0.3);background:rgba(229,35,32,0.04);">
-          <p class="card-label-red">Projected EBITDA</p>
-          <p class="red text-3xl md:text-5xl font-black tracking-tight"><span class="count-up" data-end="386">0</span> M EGP</p>
+        <div class="card p-6 md:p-8 space-y-2" style="border-color:rgba(52,211,153,0.3);background:rgba(52,211,153,0.04);">
+          <p class="card-label-emerald">Projected EBITDA</p>
+          <p class="text-3xl md:text-5xl font-black tracking-tight" style="color:var(--emerald);"><span class="count-up" data-end="386">0</span> M EGP</p>
         </div>
       </div>
       <div class="card p-5 md:p-6 text-center" style="border-color:rgba(212,168,75,0.18);">
@@ -454,7 +511,83 @@
     </div>
   </section>
 
-  <!-- ━━━━━━━━━━━━━━━━ SLIDE 5 — Growth Engine ━━━━━━━━━━━━━━━━ -->
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 5 — Capital Recovery Timeline ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 lg:px-16 py-10 md:py-16 slide-glow-center">
+    <div class="w-full max-w-4xl mx-auto space-y-6">
+      <div class="space-y-2 text-center">
+        <span class="tag">Investor ROI</span>
+        <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight text-white">Capital Recovery Timeline</h2>
+        <p class="text-sm md:text-base" style="color:var(--subtext);">Full payback projected within 14–16 months based on 2026 EBITDA of 386M EGP</p>
+      </div>
+      <div class="roi-chart" id="roi-chart">
+        <div class="roi-milestone-line" aria-hidden="true"></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:6.25"></div><span class="roi-bar-label">M1</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:12.5"></div><span class="roi-bar-label">M2</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:18.75"></div><span class="roi-bar-label">M3</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:25"></div><span class="roi-bar-label">M4</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:31.25"></div><span class="roi-bar-label">M5</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:37.5"></div><span class="roi-bar-label">M6</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:43.75"></div><span class="roi-bar-label">M7</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:50"></div><span class="roi-bar-label">M8</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:56.25"></div><span class="roi-bar-label">M9</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:62.5"></div><span class="roi-bar-label">M10</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:68.75"></div><span class="roi-bar-label">M11</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:75"></div><span class="roi-bar-label">M12</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:81.25"></div><span class="roi-bar-label">M13</span></div>
+        <div class="roi-bar-wrap milestone"><div class="roi-bar" style="--bar-height:87.5"></div><span class="roi-bar-label">M14</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:93.75"></div><span class="roi-bar-label">M15</span></div>
+        <div class="roi-bar-wrap"><div class="roi-bar" style="--bar-height:100"></div><span class="roi-bar-label">M16</span></div>
+      </div>
+      <p class="text-center text-xs font-semibold" style="color:var(--emerald);">↑ 100% ROI at Month 14</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="card p-4 md:p-5 text-center">
+          <p class="card-label mb-1">Monthly Return</p>
+          <p class="gold text-xl md:text-2xl font-bold">~32M EGP</p>
+        </div>
+        <div class="card p-4 md:p-5 text-center" style="border-color:rgba(52,211,153,0.35);">
+          <p class="card-label-emerald mb-1">Break-Even</p>
+          <p class="text-xl md:text-2xl font-bold" style="color:var(--emerald);">Month 14</p>
+        </div>
+        <div class="card p-4 md:p-5 text-center">
+          <p class="card-label mb-1">Year 1 Total</p>
+          <p class="gold text-xl md:text-2xl font-bold">386M EGP</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 6 — Proven Synergy Models ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 lg:px-16 py-10 md:py-16 slide-glow-center">
+    <div class="w-full max-w-5xl mx-auto space-y-6">
+      <div class="space-y-2 text-center">
+        <span class="tag">Market Validation</span>
+        <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight text-white">Proven Synergy Models</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="card p-5 md:p-6">
+          <h3 class="text-base md:text-lg font-bold text-white mb-2">Nawy X Ora</h3>
+          <p class="text-sm md:text-base" style="color:var(--subtext);">Ora sales reached <span class="gold font-semibold">61.8B EGP</span> in 2024 and <span class="gold font-semibold">26.2B</span> in H1 2025.</p>
+        </div>
+        <div class="card p-5 md:p-6">
+          <h3 class="text-base md:text-lg font-bold text-white mb-2">Address X MarQ Communities</h3>
+          <p class="text-sm md:text-base" style="color:var(--subtext);">MarQ grew from <span class="gold font-semibold">6B</span> in 2024 to a <span class="gold font-semibold">25B EGP</span> target in 2025 (13.4B achieved in H1).</p>
+        </div>
+        <div class="card p-5 md:p-6">
+          <h3 class="text-base md:text-lg font-bold text-white mb-2">Elements X Nations of Skies</h3>
+          <p class="text-sm md:text-base" style="color:var(--subtext);">Nations recorded <span class="gold font-semibold">75B EGP</span> in the first 9 months of 2025.</p>
+        </div>
+        <div class="card p-5 md:p-6">
+          <h3 class="text-base md:text-lg font-bold text-white mb-2">Arabia Holding X Everscopes</h3>
+          <p class="text-sm md:text-base" style="color:var(--subtext);">Strategic IPO readiness and market consolidation play.</p>
+        </div>
+      </div>
+      <div class="finale-border p-5 md:p-6 text-center">
+        <p class="text-base md:text-lg font-bold text-white leading-relaxed">Views X Horizon is engineered to be the next evolution — built to outperform every model above.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 7 — Growth Engine ━━━━━━━━━━━━━━━━ -->
   <section class="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 lg:px-16 py-10 md:py-16 slide-glow-center">
     <div class="w-full max-w-7xl mx-auto space-y-6 md:space-y-8">
       <div class="space-y-2 text-center">
@@ -505,7 +638,88 @@
     </div>
   </section>
 
-  <!-- ━━━━━━━━━━━━━━━━ SLIDE 6 — Deal Structure ━━━━━━━━━━━━━━━━ -->
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 8 — Views Client App ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 lg:px-16 py-10 md:py-16 slide-glow-center">
+    <div class="w-full max-w-5xl mx-auto space-y-6">
+      <div class="space-y-2 text-center">
+        <span class="tag">Client Ecosystem</span>
+        <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight text-white">Views Client App</h2>
+        <p class="text-sm md:text-base" style="color:var(--subtext);">Tech-Powered Loyalty for the Premium Buyer</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="card pillar p-5 md:p-6 flex flex-col gap-3">
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white">Loyalty Program</h3>
+          <p class="text-sm" style="color:var(--subtext);">Reward points for every purchase, exclusive member tiers for high-qualified buyers.</p>
+        </div>
+        <div class="card pillar p-5 md:p-6 flex flex-col gap-3">
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white">Referral Rewards</h3>
+          <p class="text-sm" style="color:var(--subtext);">High-value incentives for qualified buyer referrals and network growth.</p>
+        </div>
+        <div class="card pillar p-5 md:p-6 flex flex-col gap-3">
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white">Exclusive Launch Access</h3>
+          <p class="text-sm" style="color:var(--subtext);">First-look privileges on new developer launches and off-market opportunities.</p>
+        </div>
+      </div>
+      <div class="card p-5 md:p-6 text-center" style="border-color:rgba(26,92,68,0.5);">
+        <p class="text-sm md:text-base font-semibold text-white">A direct channel to Egypt's highest-value real estate buyers — owned by Views.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 9 — Broker Tech Hub ━━━━━━━━━━━━━━━━ -->
+  <section class="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 lg:px-16 py-10 md:py-16 slide-glow-center">
+    <div class="w-full max-w-6xl mx-auto space-y-6">
+      <div class="space-y-2 text-center">
+        <span class="tag">Broker Ecosystem</span>
+        <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight text-white">Broker Tech Hub</h2>
+        <p class="text-sm md:text-base" style="color:var(--subtext);">The Infrastructure Behind Egypt's Most Powerful Brokerage Network</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="card p-5 md:p-6 flex flex-col gap-2">
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <h3 class="text-sm md:text-base font-bold text-white">Premium Lead Marketplace</h3>
+          <p class="text-xs md:text-sm" style="color:var(--subtext);">Buy high-quality, pre-qualified buyer leads to close more deals.</p>
+        </div>
+        <div class="card p-5 md:p-6 flex flex-col gap-2">
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <h3 class="text-sm md:text-base font-bold text-white">Rental Management Suite</h3>
+          <p class="text-xs md:text-sm" style="color:var(--subtext);">Full CRM for managing residential and commercial rentals.</p>
+        </div>
+        <div class="card p-5 md:p-6 flex flex-col gap-2">
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="text-sm md:text-base font-bold text-white">Deal Closing Engine</h3>
+          <p class="text-xs md:text-sm" style="color:var(--subtext);">Close deals backed by the highest market commissions.</p>
+        </div>
+        <div class="card p-5 md:p-6 flex flex-col gap-2">
+          <div class="icon-badge-sm">
+            <svg width="20" height="20" fill="none" stroke="var(--green-light)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="text-sm md:text-base font-bold text-white">Tech in Every Pillar</h3>
+          <p class="text-xs md:text-sm" style="color:var(--subtext);">Every business unit powered by integrated proprietary technology.</p>
+        </div>
+      </div>
+      <div class="gold-box p-5 md:p-6 text-center">
+        <p class="text-sm md:text-base font-bold gold">Technology is not a feature — it is the foundation of every growth pillar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━ SLIDE 10 — Deal Structure ━━━━━━━━━━━━━━━━ -->
   <section class="min-h-screen md:h-screen w-full flex flex-col items-center justify-center px-4 sm:px-8 lg:px-16 py-10 md:py-16 slide-glow-green">
     <div class="w-full max-w-5xl space-y-6 md:space-y-8">
       <div class="space-y-2 text-center">
@@ -568,6 +782,15 @@
     });
   }, { threshold: 0.3 });
   document.querySelectorAll('.count-up').forEach(el => countObserver.observe(el));
+
+  // ── ROI chart visible ──
+  const roiChart = document.getElementById('roi-chart');
+  if (roiChart) {
+    const roiObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.2 });
+    roiObserver.observe(roiChart);
+  }
 
   // ── Nav dot tracking ──
   const deck = document.getElementById('deck');
